@@ -12,18 +12,12 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @Configuration
 @EnableWebSecurity
 public class Security {
-    FirebaseAuthFilter firebaseAuthFilter;
 
-    @Autowired
-    public Security(FirebaseAuthFilter firebaseAuthFilter){
-        this.firebaseAuthFilter = firebaseAuthFilter;
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http
-                .addFilterBefore(firebaseAuthFilter, BasicAuthenticationFilter.class)
-                .authorizeHttpRequests(requests -> requests.requestMatchers("/").authenticated())
+                .authorizeHttpRequests(requests -> requests.anyRequest().permitAll())
                 .build();
     }
 }

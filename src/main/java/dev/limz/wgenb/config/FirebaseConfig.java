@@ -20,6 +20,8 @@ public class FirebaseConfig {
         FileInputStream serviceAccount = new FileInputStream(rootDir + "/serviceAccountKey.json");
         FirebaseOptions options = FirebaseOptions.builder().setCredentials(GoogleCredentials.fromStream(serviceAccount)).build();
 
+        if(!FirebaseApp.getApps().isEmpty()) return FirebaseApp.getInstance();
+
         return FirebaseApp.initializeApp(options);
     }
 }

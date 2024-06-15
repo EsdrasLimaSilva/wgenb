@@ -16,7 +16,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Collections;
 
-@Component
 public class FirebaseAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(
@@ -48,6 +47,6 @@ public class FirebaseAuthFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         }
 
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Authorization Header");
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Authorization Header!!!");
     }
 }
