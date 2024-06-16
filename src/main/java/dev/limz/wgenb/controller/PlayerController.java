@@ -1,12 +1,11 @@
 package dev.limz.wgenb.controller;
 
-import dev.limz.wgenb.dto.PlayerDto;
-import dev.limz.wgenb.model.Player;
+import dev.limz.wgenb.exceptions.PlayerAlreadyExistsException;
+import dev.limz.wgenb.request.ApiResponse;
 import dev.limz.wgenb.request.RegisterPlayerBody;
 import dev.limz.wgenb.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,16 +19,19 @@ public class PlayerController {
     }
 
     @PostMapping("/player")
-    public Object registerPlayer(@Validated @RequestBody RegisterPlayerBody body){
-        var playerCreated = playerService.registerPlayer(body.id());
-        return new ResponseEntity<PlayerDto>(playerCreated, HttpStatus.CREATED);
+    public ApiResponse registerPlayer(@Validated @RequestBody RegisterPlayerBody body){
+        try{
+            var playerCreated = playerService.registerPlayer(body.id());
+            return new ApiResponse("Player created successfully", true, playerCreated, HttpStatus.CREATED);
+        }catch(PlayerAlreadyExistsException e){
+            return new ApiResponse("Invalid id", false, null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("player/{id}")
-    public ResponseEntity<PlayerDto> findPlayer(@PathVariable String id){
+    public ApiResponse findPlayer(@PathVariable String id){
         var player = playerService.getPlayer(id);
-        if(player != null) return new ResponseEntity<>(player, HttpStatus.FOUND);
-
-        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        if(player != null) return new ApiResponse("Player found", true, player, HttpStatus.FOUND);
+        return new ApiResponse("Player not found", false, null, HttpStatus.FOUND);
     }
 }
