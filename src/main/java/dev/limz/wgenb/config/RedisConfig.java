@@ -10,9 +10,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class RedisConfig {
     @Bean
     public JedisConnectionFactory jedisConnectionFactory(){
-        var redisStandaloneConfiguration= new RedisStandaloneConfiguration(System.getenv("REDIS_HOST"), Integer.parseInt(System.getenv("REDIS_PORT")));
-        redisStandaloneConfiguration.setPassword(System.getenv("REDIS_PASSWORD"));
-        return new JedisConnectionFactory(redisStandaloneConfiguration);
+        return new JedisConnectionFactory();
     }
 
     @Bean
