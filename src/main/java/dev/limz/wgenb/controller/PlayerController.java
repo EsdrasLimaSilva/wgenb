@@ -28,10 +28,13 @@ public class PlayerController {
         }
     }
 
-    @GetMapping("player/{id}")
+    @GetMapping("/player/{id}")
     public ApiResponse findPlayer(@PathVariable String id){
-        var player = playerService.getPlayer(id);
-        if(player != null) return new ApiResponse("Player found", true, player, HttpStatus.FOUND);
-        return new ApiResponse("Player not found", false, null, HttpStatus.FOUND);
+        var player = this.playerService.getPlayer(id);
+
+        if(player != null)
+            return new ApiResponse("Player found successfully", true, player, HttpStatus.OK);
+
+        return new ApiResponse("Player not found", false, null, HttpStatus.NOT_FOUND);
     }
 }

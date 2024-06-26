@@ -20,16 +20,15 @@ public class PlayerService {
 
     public PlayerDto registerPlayer(String playerId) throws PlayerAlreadyExistsException{
         var player = new Player(playerId);
-        var createdPlayer = playerRepository.save(player);
-
         if(playerRepository.findById(playerId).isPresent()) throw new PlayerAlreadyExistsException();
 
+        var createdPlayer = playerRepository.save(player);
         return new PlayerDto(createdPlayer.getId());
+
     }
 
     public PlayerDto getPlayer(String playerId){
         var playerFound = playerRepository.findById(playerId);
         return playerFound.map(player -> new PlayerDto(player.getId())).orElse(null);
-
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Collections;
 
+@Component
 public class FirebaseAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(
@@ -25,10 +26,8 @@ public class FirebaseAuthFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         var authHeader = request.getHeader("Authorization");
-
         if(authHeader != null && authHeader.startsWith("Bearer ")){
-            var token = authHeader.substring(0, 7);
-
+            var token = authHeader.substring(7);
             try {
 
                 FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
@@ -43,10 +42,11 @@ public class FirebaseAuthFilter extends OncePerRequestFilter {
                 return;
 
             }
-
             filterChain.doFilter(request, response);
+        } else {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Authorization Header!!!");
         }
 
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Authorization Header!!!");
+
     }
 }
